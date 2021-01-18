@@ -2,6 +2,12 @@
 
 A WebWorker implementation that eases the use of ffmpeg library in the browser.
 
+This fork contains fixed version of ffmep-all-codecs file for efficient trimming of the video by allowing option to add command before and after -i (input file)
+
+Following command can be achieved this fork version 
+-ss 00:00:01 -i ${filename} -to 00:00:03 -c:v copy -c:a copy output.mp4
+
+
 This builds upon an existing work geniusly done by the folks at
 [Ffmpeg.js](https://github.com/muaz-khan/Ffmpeg.js/) and
 [videoconverter.js](https://github.com/bgrins/videoconverter.js)
@@ -64,7 +70,7 @@ class FFMPEG extends React.Component {
     // Set the file for processing
     workerClient.inputFile = file;
     // Run a valid ffmpeg command
-    workerClient.runCommand("-ss 00:00:05 -c copy -t 12 sliced-output.mp4");
+    workerClient.runCommand("-ss 00:00:05","-c copy -t 12 sliced-output.mp4");
   }
 
   Input({ onChange }) {
@@ -86,7 +92,7 @@ class FFMPEG extends React.Component {
     e.preventDefault();
     this.setState({ stdOutputText: "" });
     // Run a valid ffmpeg command
-    workerClient.runCommand("-codecs");
+    workerClient.runCommand("-codecs", "");
   }
 
   render() {
@@ -145,7 +151,7 @@ Detects if the inputFile has been passed in correctly.
 
 Converts already set input file in the library to Buffer Array for processing
 
-### workerClient.runCommand (command: String, totalMemory = 33554432: Number) : void
+### workerClient.runCommand (preICommand: String, postICommand: String, totalMemory = 33554432: Number) : void
 
 Accepts a valid ffmpeg command to be run against the input file
 
